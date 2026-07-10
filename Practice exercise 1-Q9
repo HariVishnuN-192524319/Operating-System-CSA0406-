@@ -1,0 +1,26 @@
+#include <stdio.h>
+
+int q[5], front = -1, rear = -1;
+
+int main()
+{
+    // Producer
+    front = 0;
+    q[++rear] = 10;
+    q[++rear] = 20;
+    q[++rear] = 30;
+
+    printf("Buffer: ");
+    for(int i = front; i <= rear; i++)
+        printf("%d ", q[i]);
+
+    // Consumer
+    printf("\nConsumed: %d", q[front]);
+    front++;
+
+    printf("\nBuffer: ");
+    for(int i = front; i <= rear; i++)
+        printf("%d ", q[i]);
+
+    return 0;
+}
