@@ -1,1 +1,26 @@
+#include <stdio.h>
 
+int main()
+{
+    int n, i;
+    int process[10];
+
+    printf("Enter the number of processes: ");
+    scanf("%d", &n);
+
+    printf("Enter the Process IDs:\n");
+    for(i = 0; i < n; i++)
+    {
+        scanf("%d", &process[i]);
+    }
+
+    printf("\nExecuting Processes:\n");
+    for(i = 0; i < n; i++)
+    {
+        printf("Executing Process P%d\n", process[i]);
+    }
+
+    printf("\nAll processes executed successfully.\n");
+
+    return 0;
+}
