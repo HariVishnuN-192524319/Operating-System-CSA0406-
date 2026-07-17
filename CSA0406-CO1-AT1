@@ -1,0 +1,131 @@
+NAME:HARI VISHNU N
+REG NO:192524319
+
+QUESTION 1:
+  
+A) It allows multiple users to access the same computer system simultaneously, Each user can execute programs independently while sharing system resources like CPU, memory, and storage efficiently
+  
+B) Process Scheduling – Allocates CPU time to processes efficiently 
+   Memory Management – Allocates and deallocates memory for each process while  ensuring the process 
+
+c) pseudo code - creating the child process and displaying the same
+START 
+
+CREATE A CHILD USING FUNCTION FORK()
+
+IF fork() returns 0 THEN
+      Display "Child Process"
+      Display Child Process id using getpid()
+      display the parent id using getppid()
+ELSE
+      Display "Parent Process"
+      Display Parent Process ID using getpid()
+      Display Child Process ID returned by fork()
+
+STOP
+
+QUESTION 2:
+
+A) system call for system call (creating,writing,reading,closing)
+creating or opening the file---open()
+Writing to File---write()
+Reading from File---read()
+Closing the File---close()
+
+B)file management system calls
+1 open()
+Opens an existing file or creates a new file
+2 write()
+Writes data from memory to the specified file
+also Returns the number of bytes successfully written
+
+C) Pseudo-code to create a file, write a student name, and close the file
+START
+fd = open("student.txt", CREATE + WRITE_ONLY)
+
+IF file opened successfully THEN
+      write(fd, "Hari Vishnu")
+      close(fd)
+      PRINT "File Created and Data Written"
+ELSE
+      PRINT "Error Opening File"
+END IF
+END
+
+QUESTION 3:
+
+A)System calls required to copy one file to another
+open() – Opens the source and destination files
+read() – Reads data from the source file
+write() – Writes data to the destination file
+close() – Closes both files after the operaition
+
+B) purpose of two system call in content copying
+1. read()
+Reads data from the source file into a buffer
+Returns the number of bytes read If it returns 0, it indicates the end of the file (EOF)
+2. write()
+Writes the data stored in the buffer to the destination file
+Returns the number of bytes successfully written
+
+C) pseudo code for copying the content from one to another file
+START
+Opensource file in READ mode
+Create/Open destination file in WRITE mode
+
+WHILE data is available in source file
+    Read data into buffer
+    Write buffer to destination file
+
+END WHILE
+Close source file
+Close destination file
+STOP
+
+QUESTION 4:
+
+A) Purpose of fork() and exec() system calls
+fork():
+Creates a new child process by duplicating the parent process
+exec():
+Replaces the current process image with a new program
+It is usually called by the child process after fork() to execute another program
+
+B) Role of wait() system call:
+wait() makes the parent process wait until the child process finishes execution.
+It prevents the creation of zombie processes.it also allow the parent to obtain the childs properties(exit...)
+
+C) 
+Start
+pid = fork()
+if (pid == 0){
+    exec("new_program")
+}else{
+    wait()
+    print("Child process completed")}
+Stop
+END
+
+QUESTION 5:
+  
+A)Importance of file management in an operating system
+File management is responsible for organizing, storing, retrieving, and protecting files on secondary storage It enables users and programs to create, access, modify, delete, and manage files efficiently while ensuring data security and proper access control
+
+B)open(): Opens an existing file or create file if needed and returns a file
+close(): Closes the opened file
+
+C) C-based system call sequence
+#include <unistd.h>
+int main(){
+    int fd;
+    char buffer;
+    fd = open("data.txt", O_RDONLY);
+    if (fd != -1){
+        read(fd, buffer, sizeof(buffer));
+        close(fd);}
+    return 0;
+}
+
+
+
+
