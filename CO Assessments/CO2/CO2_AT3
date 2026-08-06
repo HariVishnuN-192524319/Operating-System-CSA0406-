@@ -1,0 +1,104 @@
+Q1. Deadlock Debugging:
+
+Debugging Analysis:
+The deadlock occurs because both processes acquire the shared resources in different orders.
+P1 locks R1 first and then requests R2.
+P2 locks R2 first and then requests R1.
+
+If both processes execute simultaneously:
+P1 holds R1 and waits for R2.
+P2 holds R2 and waits for R1.
+This creates a circular wait, causing a deadlock.
+
+Optimized Code:
+Process P1
+lock(R1);
+lock(R2);
+Critical Section
+unlock(R2);
+unlock(R1);
+
+Process P2
+lock(R1);
+lock(R2);
+Critical Section
+unlock(R2);
+unlock(R1);
+
+Optimization:
+Maintain a fixed resource allocation order (R1 → R2) for all processes. This removes the circular wait condition and prevents deadlock.
+
+Result:Deadlock is eliminated without changing the process logic.
+
+Q2. CPU Utilization Problem:
+
+Debugging Analysis
+
+The scheduler repeatedly shows:
+Ready → Waiting → Ready → Waiting
+
+This indicates that processes are I/O-bound. They frequently wait for I/O operations, leaving the CPU idle even though processes exist in the system. As a result, CPU utilization remains at only 30%.
+
+Optimization:
+Use asynchronous (non-blocking) I/O so processes do not block unnecessarily.
+Increase the degree of multiprogramming so another process can execute while one waits.
+Use a scheduler such as Multilevel Feedback Queue (MLFQ) or optimize Round Robin parameters.
+
+Result:
+CPU idle time decreases and CPU utilization improves significantly.
+
+Q3. Memory Bottleneck Debugging:
+
+Debugging Analysis
+
+Memory usage:
+
+Code = 5 MB
+Heap = 150 MB
+Stack = 25 × 1 MB = 25 MB
+Total = 180 MB
+
+Although total memory is less than 2 GB, the application experiences frequent page faults because multiple threads access large memory regions, increasing memory pressure and reducing cache efficiency.
+
+Optimization:
+
+Optimization 1: Use a thread pool to reduce the number of active threads.
+
+Optimization 2: Optimize heap allocation by using memory pools, releasing unused memory, and improving data locality.
+
+Result:
+Page faults decrease, memory performance improves, and execution becomes faster.
+
+Q4. Starvation Debugging:
+
+Debugging Analysis:
+
+P5 belongs to Q3 (Batch Queue), which uses FCFS scheduling. Since higher-priority queues (Q1 and Q2) continuously receive new processes, P5 never gets CPU time.
+This is a classic case of starvation.
+
+Optimization:
+Implement Aging, where the priority of a process increases the longer it waits.
+Alternatively, use a Multilevel Feedback Queue (MLFQ) so long-waiting processes can move to higher-priority queues.
+
+Result:
+Every process eventually receives CPU time, ensuring fairness and preventing starvation.
+
+Q5. Context-Switch Overhead Debugging:
+
+Debugging Analysis:
+
+Given:
+Context switches = 20,000/sec
+Average burst time = 2 ms
+Time quantum = 1 ms
+High I/O frequency
+
+Since the time quantum (1 ms) is smaller than the average CPU burst (2 ms), most threads are preempted before completing. Frequent I/O waits also cause repeated scheduling, resulting in excessive context switching.
+
+Optimization:
+Optimization 1: Increase the time quantum to 4–5 ms so threads can complete more work before preemption.
+
+Optimization 2: Reduce I/O wait time using asynchronous I/O, buffering, or batching of I/O requests.
+
+Result:
+The number of context switches decreases, CPU overhead is reduced, and overall system performance improves.
