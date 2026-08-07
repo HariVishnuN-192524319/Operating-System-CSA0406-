@@ -1,0 +1,181 @@
+HARI VISHNU N
+192524319
+CSA0406-OPERATING SYSTEM
+
+QUESTION 1: logical-to-physical address translation using Base and Limit Registers.
+C CODE: 
+  #include <stdio.h>
+    int main() {
+        int base, limit, logical, physical;
+        printf("Enter Base Register value: ");
+        scanf("%d", &base);
+        printf("Enter Limit Register value: ");
+        scanf("%d", &limit);
+        printf("Enter Logical Address: ");
+        scanf("%d", &logical);
+        if (logical >= 0 && logical < limit) {
+            physical = base + logical;
+            printf("\nLogical Address is VALID.\n");
+            printf("Physical Address = %d\n", physical);
+        } else {
+            printf("\nInvalid Logical Address! Address Trap.\n");
+        }
+        return 0;
+    }
+
+OUTPUT:
+  Enter Base Register value: 1000
+  Enter Limit Register value: 500
+  Enter Logical Address: 250
+  
+  Logical Address is VALID.
+  Physical Address = 1250
+
+QUESTION 2: Paging Memory Management Scheme.
+C CODE:
+  #include <stdio.h>
+  int main() {
+      int pt[10], n, size, p, off;
+      printf("Enter number of pages: ");
+      scanf("%d", &n);
+      printf("Enter page size: ");
+      scanf("%d", &size);
+      printf("Enter frame numbers:\n");
+      for(int i = 0; i < n; i++)
+          scanf("%d", &pt[i]);
+      printf("Enter page number and offset: ");
+      scanf("%d%d", &p, &off);
+      if(p < n && off < size)
+          printf("Physical Address = %d", pt[p] * size + off);
+      else
+          printf("Invalid Page Number or Offset");
+      return 0;
+  }
+
+OUTPUT:
+  Enter number of pages: 4
+  Enter page size: 100
+  Enter frame numbers:
+  5
+  2
+  7
+  1
+  Enter page number and offset: 2 50
+  Physical Address = 750
+
+QUESTION 3: Logical to Physical Address Translation using Page Table.
+C CODE:
+  #include <stdio.h>
+  int main() {
+      int pt[10], n, size, page, offset, frame, physical, i;
+      printf("Enter number of pages: ");
+      scanf("%d",&n);
+      printf("Enter page size: ");
+      scanf("%d",&size);
+      printf("Enter frame numbers:\n");
+      for(i=0;i<n;i++)
+          scanf("%d",&pt[i]);
+      printf("Enter page number: ");
+      scanf("%d",&page);
+      printf("Enter offset: ");
+      scanf("%d",&offset);
+      printf("\n PAGE TABLE \n");
+      printf("Page\tFrame\n");
+      for(i=0;i<n;i++)
+          printf("%d\t%d\n", i, pt[i]);
+      if(page>=0 && page<n&&offset>=0&&offset<size) {
+          frame = pt[page];
+          physical = frame * size + offset;
+          printf("\nTranslation:\n");
+          printf("Page Number  : %d\n", page);
+          printf("Frame Number : %d\n", frame);
+          printf("Offset       : %d\n", offset);
+          printf("Physical Address = %d\n", physical);
+      }
+      else {
+          printf("\nInvalid Logical Address\n");
+      }
+      return 0;
+  }
+
+OUTPUT:
+Enter number of pages: 4
+Enter page size: 100
+Enter frame numbers:
+5
+2
+7
+1
+Enter page number: 2
+Enter offset: 30
+
+ PAGE TABLE 
+Page	Frame
+0	5
+1	2
+2	7
+3	1
+
+Translation:
+Page Number  : 2
+Frame Number : 7
+Offset       : 30
+Physical Address = 730
+
+QUESTION 4: Translation Lookaside Buffer (TLB) and Effective Memory Access Time (EMAT)
+C CODE:
+  #include <stdio.h>
+  int main() {
+      float hitRatio, tlbTime, memTime, emat;
+      printf("Enter TLB access time: ");
+      scanf("%f", &tlbTime);
+      printf("Enter Memory access time: ");
+      scanf("%f", &memTime);
+      printf("Enter TLB hit ratio (0 to 1): ");
+      scanf("%f", &hitRatio);
+      // Effective Memory Access Time (EMAT)
+      emat = hitRatio * (tlbTime + memTime) +
+             (1 - hitRatio) * (tlbTime + 2 * memTime);
+      printf("\nWithout TLB = %.2f ns", 2 * memTime);
+      printf("\nWith TLB (EMAT) = %.2f ns", emat);
+      return 0;
+  }
+
+OUTPUT:
+Enter TLB access time: 10
+Enter Memory access time: 100
+Enter TLB hit ratio (0 to 1): 0.8
+
+Without TLB = 200.00 ns
+With TLB (EMAT) = 130.00 ns
+
+QUESTION 5: Memory Protection using Base and Limit Registers
+C CODE:
+  #include <stdio.h>
+  int main() {
+      int base, limit, logical, physical;
+      printf("Enter Base Register: ");
+      scanf("%d", &base);
+      printf("Enter Limit Register: ");
+      scanf("%d", &limit);
+      printf("Enter Logical Address: ");
+      scanf("%d", &logical);
+      if(logical >= 0 && logical < limit) {
+          physical = base + logical;
+          printf("\nAccess Granted");
+          printf("\nPhysical Address = %d", physical);
+      }
+      else {
+          printf("\nAccess Denied");
+          printf("\nInvalid Logical Address");
+      }
+      return 0;
+  }
+
+OUTPUT:
+Enter Base Register: 1000
+Enter Limit Register: 500
+Enter Logical Address: 250
+
+Access Granted
+Physical Address = 1250
