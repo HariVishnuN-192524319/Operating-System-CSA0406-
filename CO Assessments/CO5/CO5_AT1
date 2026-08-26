@@ -1,0 +1,189 @@
+HARI VISHNU N
+192524319
+CO5_AT1
+
+1. OPTIMIZED LINUX FILE SYSTEM LAYOUT FOR A 50 GB SERVER
+
+Problem Analysis:
+The server has 50 GB storage for system files, logs, user files, and application data. Uncontrolled logs may fill the disk and stop critical services. Therefore, storage must be separated and monitored.
+
+Proposed File System Layout:
+/boot – 1 GB – Kernel and boot files
+/ – 8 GB – Operating system and utilities
+/var – 8 GB – Variable system data
+/var/log – 10 GB – Dedicated log storage
+/home – 8 GB – User files
+/opt – 5 GB – Application data
+swap – 4 GB – Virtual memory
+Reserved – 6 GB – Emergency space
+Total – 50 GB
+A separate /var/log partition prevents logs from filling the root filesystem.
+Log Management Using Logrotate:
+/var/log/myserver/*.log {
+daily
+rotate 7
+size 500M
+compress
+}
+Logs are rotated daily or when they reach 500 MB.
+
+Disk Monitoring:
+df -h
+du -sh /var/log/*
+sudo logrotate -f /etc/logrotate.conf
+
+Conclusion:
+The dedicated log partition, logrotate, compression, monitoring, and reserved space prevent disk exhaustion and maintain system stability.
+
+2. KERNEL-LEVEL OPTIMIZATION FOR HIGH CPU WORKLOADS
+
+Problem Analysis:
+Frequent context switching causes scheduling overhead. Since hardware upgrades are unavailable, kernel and scheduler optimization can improve CPU performance.
+
+Scheduler Tuning:
+SCHED_OTHER is the normal Linux scheduling policy. SCHED_FIFO provides first-in-first-out real-time scheduling, while SCHED_RR provides round-robin scheduling.
+sudo chrt -f 50 ./realtime_app
+Real-time priorities must be used carefully.
+
+Process Priority:
+sudo nice -n -10 ./application
+sudo renice -10 -p PID
+Higher priority should be given only to important workloads.
+
+CPU Affinity:
+taskset -c 0,1 ./application
+sudo taskset -cp 0,1 PID
+CPU affinity reduces unnecessary process migration.
+
+Kernel Parameters:
+sudo sysctl -p
+A PREEMPT_RT-enabled kernel can reduce scheduling latency.
+
+Kernel Modules:
+lsmod
+modinfo module_name
+sudo modprobe -r module_name
+
+Performance Monitoring:
+vmstat 1
+pidstat -w 1
+top
+
+Conclusion:
+Scheduler tuning, CPU affinity, priority management, PREEMPT_RT, and monitoring reduce scheduling overhead and improve CPU utilization.
+
+3. PROCESSING 1 MILLION LOG ENTRIES USING SHELL SCRIPTING
+
+Problem Analysis:
+The administrator must process 1 million log entries daily within 2 minutes. Repeated loops and external commands create unnecessary overhead. Efficient commands should be used.
+
+Recommended Commands:
+awk, grep, sort, uniq, cut, sed, and head are useful for log processing.
+
+Counting Log Levels:
+awk '{count[$3]++} END {for (x in count) print x, count[x]}' server.log
+
+Filtering Errors:
+grep -F "ERROR" server.log
+
+Counting Error Types:
+awk '$3=="ERROR" {count[$4]++} END {for (x in count) print x, count[x]}' server.log
+
+Efficient Single-Pass Processing:
+awk '{total++; level[$3]++} END {print "Total:",total; for(x in level) print x,level[x]}' server.log
+
+Execution Time:
+time ./process_logs.sh
+
+Avoid:
+cat server.log | grep ERROR
+
+Use:
+grep -F "ERROR" server.log
+External commands should not be repeatedly executed inside loops.
+
+Conclusion:
+Efficient shell scripting reduces process creation and disk I/O. awk can perform filtering and counting in one pass. The script should be benchmarked to verify the 2-minute requirement.
+
+4. MANAGING A FAULTY PROCESS CONSUMING 90% CPU
+
+Problem Analysis:
+A background process is consuming 90% CPU. Critical services must continue operating, so the process must be controlled without rebooting.
+
+Process Identification:
+top
+ps aux --sort=-%cpu | head
+The faulty process PID is 2451.
+
+Process Monitoring:
+top -p 2451
+pidstat -p 2451 1
+Reduce Process Priority:
+
+sudo renice 10 -p 2451
+A higher nice value lowers scheduling priority.
+
+Restrict CPU Usage:
+sudo cpulimit -p 2451 -l 20
+
+Systemd Resource Control:
+sudo systemctl set-property myservice.service CPUQuota=30%
+
+Safe Termination:
+sudo kill 2451
+
+If necessary:
+sudo kill -9 2451
+SIGKILL should be the last resort.
+
+Recovery Verification:
+top
+uptime
+vmstat 1
+
+Recommended Strategy:
+Identify the process, monitor it, lower its priority, limit CPU usage, and terminate it gracefully if required.
+
+Conclusion:
+Linux process management tools control faulty processes without rebooting and maintain system availability.
+
+5. RESOURCE ALLOCATION FOR 5 VIRTUAL MACHINES WITH 16 GB RAM
+
+Problem Analysis:
+The physical server has 16 GB RAM and 5 virtual machines. Each VM requires at least 2 GB, while the host requires 4 GB.
+
+RAM Required by VMs:
+5 × 2 GB = 10 GB
+
+RAM Required by Host:
+4 GB
+
+Total Minimum Requirement:
+10 GB + 4 GB = 14 GB
+
+Remaining RAM:
+16 GB − 14 GB = 2 GB
+
+Basic Resource Allocation:
+Host OS – 4 GB
+VM 1 – 2 GB
+VM 2 – 2 GB
+VM 3 – 2 GB
+VM 4 – 2 GB
+VM 5 – 2 GB
+Reserved – 2 GB
+Total – 16 GB
+
+Recommended Strategy:
+The host receives 4 GB and each VM receives 2 GB. The remaining 2 GB should be reserved for virtualization overhead and temporary workload increases.
+
+Memory Overcommitment:
+Ballooning and dynamic memory allocation can be used carefully. Excessive swapping should be avoided because it reduces VM performance.
+
+Memory Monitoring:
+free -h
+vmstat 1
+virsh list
+
+Conclusion:
+The VMs require 10 GB and the host requires 4 GB. The remaining 2 GB can be reserved for overhead and emergencies. This allocation satisfies the minimum requirements and supports stable operation.
