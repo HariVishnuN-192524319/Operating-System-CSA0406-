@@ -1,0 +1,124 @@
+HARI VISHNU N
+192524319
+CO5_AT2
+
+QUESTION 01:
+File System Space Management Algorithm
+Pseudocode:
+  BEGIN
+  SET threshold = 80%
+  GET current disk usage
+  IF disk usage > threshold THEN
+      DISPLAY "Warning: Disk usage exceeds 80%"
+      IDENTIFY all log files
+      SORT log files by size in descending order
+      FOR each log file DO
+          IF log file is old THEN
+              ROTATE log file
+              COMPRESS rotated log file
+          ELSE
+              COMPRESS log file
+          ENDIF
+          GET current disk usage
+          IF disk usage <= 80% THEN
+              BREAK
+          ENDIF
+      ENDFOR
+      IF disk usage > 80% THEN
+          DELETE oldest compressed log files
+      ENDIF
+  ELSE
+      DISPLAY "Disk usage is within safe limit"
+  ENDIF
+  DISPLAY current disk usage
+  END
+
+QUESTION 02:
+Priority-Based CPU Scheduling Algorithm
+Pseudocode:
+  BEGIN
+  INPUT process_list
+  FOR each process IN process_list DO
+      READ process_id
+      READ priority
+      READ burst_time
+  ENDFOR
+  SORT process_list BY priority in descending order
+  WHILE process_list is NOT EMPTY DO
+      SELECT process WITH highest priority
+      ALLOCATE CPU to selected process
+      EXECUTE process
+      IF process is completed THEN
+          REMOVE process from process_list
+          DISPLAY "Process completed"
+      ELSE
+          REDUCE process priority slightly
+          ADD process back to process_list
+      ENDIF
+      SORT process_list BY priority in descending order
+  ENDWHILE
+  DISPLAY "All processes completed"
+  END
+
+QUESTION 03:
+RAM Resource Management for Virtual Machines
+Pseudocode:
+  BEGIN
+  SET total_RAM = 16GB
+  SET host_reserved = 4GB
+  _RAM = total_RAM - host_reserved
+  INPUT number_of_VMs
+  SET min_RAM = 2GB
+  FOR i = 1 TO number_of_VMs DO
+      IF available_RAM >= min_RAM THEN
+          ALLOCATE min_RAM to VM[i]
+          available_RAM = available_RAM - min_RAM
+          DISPLAY "RAM allocated to VM[i]"
+      ELSE
+          DISPLAY "Insufficient memory for VM[i]"
+      ENDIF
+  ENDFOR
+  DISPLAY "Remaining available RAM = ", available_RAM
+  END
+
+QUESTION 04:
+Hypervisor Selection Algorithm
+Pseudocode:
+  BEGIN
+  INPUT performance_required
+  INPUT budget
+  INPUT hardware_access
+  IF performance_required = HIGH AND hardware_access = TRUE THEN
+      SELECT Type_1_Hypervisor
+      DISPLAY "Type 1 Hypervisor selected for high performance"
+  ELSE IF budget = LOW THEN
+      SELECT Type_2_Hypervisor
+      DISPLAY "Type 2 Hypervisor selected for low cost"
+  ELSE
+      SELECT Type_1_Hypervisor
+      DISPLAY "Type 1 Hypervisor selected for better resource utilization"
+  ENDIF
+  PRINT "Selected Hypervisor = ", selected_hypervisor
+  END
+
+QUESTION 05:
+CPU and Memory Resource Limiting Algorithm
+Pseudocode:
+  BEGIN
+  INPUT application_list
+  FOR each application IN application_list DO
+      CREATE cgroup for application
+      SET CPU limit for application
+      SET memory limit for application
+      ASSIGN application process to cgroup
+      MONITOR CPU usage
+      MONITOR memory usage
+      IF CPU usage exceeds CPU limit THEN
+          THROTTLE CPU usage
+      ENDIF
+      IF memory usage exceeds memory limit THEN
+          REDUCE memory allocation
+      ENDIF
+  ENDFOR
+  DISPLAY "CPU and memory usage are successfully regulated"
+  END
